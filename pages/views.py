@@ -5,11 +5,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
+from .forms import PageForm
+from .models import Page
 
 # Create your views here.
 @login_required
 def home(request):
-    return render(request, 'pages/home.html')
+    return render(request, 'pages/home.html', {'pages':request.user.page_set.all()})
 
 def login_view(request):
     message = ''
@@ -32,3 +34,18 @@ class SignUp(CreateView):
 def logout_view(request):
     logout(request)
     return redirect(reverse_lazy('login'))
+
+@login_required
+def PageCreate(request):
+    message = ''
+    if request.method == 'POST':
+        if PageForm({'content':request.POST['content']}).is_valid():
+            page = Page(content=request.POST['content'], author=request.user)
+            page.save()
+            return redirect(reverse_lazy('home'))
+        else:
+            message = "Invalid page content"
+    return render(request, 'pages/create.html', {
+        'form':PageForm,
+        'message':message
+        })

@@ -1,0 +1,24 @@
+{% extends 'pages/base.html' %}
+
+{% block content %}
+<h1>
+    Write new Page
+</h1>
+
+<style>
+    input[type="text"] {
+        min-width: 200px;
+        min-height: 100px;
+        overflow-wrap: normal;
+    }
+</style>
+
+<form action="{% url 'pagecreate' %}" method="POST">
+    {% csrf_token %}
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+    {{ form.as_p }}
+    <input type="submit" value="Create Page">
+</form>
+{% endblock %}

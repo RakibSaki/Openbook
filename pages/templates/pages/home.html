@@ -2,4 +2,12 @@
 
 {% block content %}
 <h1>This is Openbook!</h1>
+<h2>Pages from your book</h2>
+<div>
+    {% for page in pages %}
+    <p>{{ page.content }}</p>
+    {% empty %}
+    <em>You have not written any pages yet</em>
+    {% endfor %}
+</div>
 {% endblock %}
