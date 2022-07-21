@@ -1,4 +1,3 @@
-from audioop import reverse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -49,3 +48,15 @@ def PageCreate(request):
         'form':PageForm,
         'message':message
         })
+
+@login_required
+def PageUpdate(request, pk):
+    message = ''
+    page = None
+    try:
+        page = Page.objects.get(pk=pk)
+    except Page.DoesNotExist:
+        message = 'Page does not exist'
+    if page.author != request.user:
+        return render(request, 'pages/view.html', {'message': message})
+    return render(request, 'pages/update.html', {'message': message, 'page': page})
